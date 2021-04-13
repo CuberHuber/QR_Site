@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+    <!-- <link type="" href="{{ url_for('static', filename='css/index_style.css')}}" rel="stylesheet"/> -->
+    <!-- <link type="" href="../static/css/login_style.css" rel="stylesheet"/>
+    <link type="" href="{{ url_for('static', filename='css/var-text_style.css')}}" rel="stylesheet"/>
+     -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/organizator-profile.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/organizator-profile.css') }}"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create-event-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash-style.css')}}">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="nav-header">
+        <a href="{{ url_for('index') }}"> Главная</a>
+    </div>
+    <div class="container">
+        <div class="bar">
+            <div class="profile">
+                <div class="wripe-event-image" style="background-image: url('{{ user_image }}')"></div>
+                <!-- <img src="../static/img_background_event/1.jpg" alt=""> -->
+                    <ul class="profile-data">
+                        <li>{{ user['name'] }}</li>
+                        <li>{{ user['surname'] }}</li>
+                        <li>{{ user['patronymic'] }}</li>
+                        <li>{{ user['email'] }}</li>
+                    </ul>
+            </div>
+            <div class="menu">
+                <div class="menu-box">
+                    <div class="menu-buttons">
+
+                        <input type="button" class="button" id="create-event" value="создать мероприятие">
+
+                        <input type="button" class="button" id="create-security" value="создать охраника">
+
+                        <input type="button" class="button" id="created-events" value="мои мероприятия">
+
+                    </div>
+                    <form action="{{ url_for('logout')}}" method="GET">
+                        <input type="submit" class="button" value="выйти">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="list-bar">
+            <div class="list-events">
+                <div class="created-events-container" id="created-events-container">
+                    <div class="scroll-table">
+                        <table>
+                            <tbody><tr>
+                            <th>Название</th>
+                            <th>дата начала</th>
+                            <th>дата окончания</th>
+                            <th>              </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="scroll-table-body">
+                        <table>
+                            <tbody>
+                                {% if list_events['count'] >= 1 %}
+                                    {% for event in list_events['events']%}
+                                        <tr>
+                                            <td>{{ event['name'] }}</td>
+                                            <td>{{ event['datetime_start'] }}</td>
+                                            <td>{{ event['datetime_end'] }}</td>
+                                            <td>
+                                                <form action="{{ url_for('organizer_profile') }}" method="POST">
+                                                    <input type="text" value="{{ event['id'] }}" id="event-id-link" name="event_id" hidden>
+                                                    <input type="text" value="200" name="type-request" hidden>
+                                                    <input type="submit" value="подробнее">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>Нет созданных мероприятий</tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="selected-event" id="selected-event-container">
+                    {% if seleced_event %}
+                        <div class="profile-box">
+                            <div class="profile-info">
+                                <div class="event-image-box" style="background-image: url('{{ event_image }}')"></div>
+
+                                <ul class="profile-data" id="description-event">
+                                    <li>{{ seleced_event['name'] }}</li>
+                                    <li>{{ seleced_event['description'] }}</li>
+                                    <li>{{ seleced_event['datetime_start'] }}</li>
+                                    <li>{{ seleced_event['datetime_end'] }}</li>
+                                </ul>
+                            </div>
+                            <div class="registered-users-box">
+                                <div class="prosto-button">
+                                    <input type="button" class="button" id="created-user" value="добавить участника">
+                                </div>
+                                <div class="prosto">
+                                    <div id="list-user-prosto">список участников</div>
+                                    <ul class="created-user-list">
+                                        {% if visitors['count'] == 0%}
+                                            <li>нет зарегистрированных участников</li>
+                                        {% else %}
+                                            {% for visitor in visitors['visitors'] %}
+                                                {% if visitor['role'] == 1 %}
+                                                    <li id="visitor-refree">
+                                                        <label>{{ visitor['name'] }}</label>
+                                                        <label>{{ visitor['surname'] }}</label>
+                                                    </li>
+                                                {% elif visitor['role'] == 4 %}
+                                                    <li id="visitor-staff">
+                                                        <label>{{ visitor['name'] }}</label>
+                                                        <label>{{ visitor['surname'] }}</label>
+                                                    </li>
+                                                {% else %}
+                                                    <li id="visitor-part">
+                                                        <label>{{ visitor['name'] }}</label>
+                                                        <label>{{ visitor['surname'] }}</label>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="reg-form-container" id="reg-form-container" hidden>
+                    <div class="">
+                        <form action="{{ url_for('organizer_profile') }}" method="post" class="form-reg-users" enctype=multipart/form-data>
+                            <ul class="ul-reg-event">
+                                {% for type, msg in get_flashed_messages(with_categories=True, category_filter=['error']) %}
+                                    <li class="flash {{type}}">
+                                        {{ msg }}
+                                    </li>
+                                {% endfor %}
+                                <li>
+                                    <input type="text" placeholder="Название мероприятия" name="title" id="fullname-form" class="input">
+                                </li>
+                                <li>
+                                    <label for="">описание мероприятия</label>
+                                    <textarea name="description" id="" cols="30" rows="10"></textarea>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="file" id="event-files" name="files" >
+                                        <div class="img-box"><img id="event-field" src="" alt=""></div>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label for="">Начало мероприятия</label>
+                                    <input type="datetime-local" name="datetime_start" id="">
+                                </li>
+                                <li>
+                                    <label for="">Конец мероприятия</label>
+                                    <input type="datetime-local" name="datetime_end" id="">
+                                </li>
+                                <li>
+                                    <input type="text" name="type-request" value="create" hidden>
+                                    <input type="submit" class="submit input" value="создать">
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+                </div>
+                <div class="reg-form-container" id="create-security-container" hidden>
+                    <form action="{{ url_for('organizer_profile') }}" class="form-reg-users" method="post" enctype=multipart/form-data>
+                        <ul class="ul-reg-event">
+                            {% for type, msg in get_flashed_messages(with_categories=True, category_filter=['error']) %}
+                                <li class="flash {{type}}">
+                                    {{ msg }}
+                                </li>
+                            {% endfor %}
+                            <li>
+                                <input type="text" placeholder="имя" name="name" id="name-form" class="input">
+                            </li>
+                            <li>
+                                <input type="text" placeholder="фамилия" name="surname" id="surname-form" class="input">
+                            </li>
+                            <li>
+                                <input type="text" placeholder="отчество" name="patronymic" id="lastname-form" class="input">
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="file" id="secure-files" name="files" >
+                                    <div class="img-box"><img id="secure-field" src="" alt=""></div>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="email" placeholder="email" name="email" id="">
+                            </li>
+                            <li>
+                                <input type="password" placeholder="пароль" name="password1" id="">
+                            </li>
+                            <li>
+                                <input type="password" placeholder="повторите пароль" name="password2" id="">
+                            </li>
+                            <li>
+                                <input type="text" name="type-request" value="create-security" hidden>
+                                <input type="submit" class="submit input" value="создать">
+                            </li>
+                        </ul>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="reg-new-user-box" hidden>
+        <form action="{{ url_for('organizer_profile') }}"  class="reg-new-user-form" method="POST" enctype=multipart/form-data>
+            <ul>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <li class=flashes id="message-info">{{ message }}</li>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <li>
+                    <input type="text" placeholder="имя"  name="name" id="user-name-form" class="input input-form">
+                </li>
+                <li>
+                    <input type="text" placeholder="фамилия" name="second_name" id="second_name-form" class="input input-form">
+                </li>
+                <li>
+                    <input type="text" placeholder="отчество" name="last_name" id="last_name-form" class="input input-form">
+                </li>
+                <li>
+                    <select class="input" name="role" id="select-field" onmousedown="$(':first-child', this).remove(); this.onmousedown = null;">
+                        <option value="">выберите роль</option>
+                        <option value="4">персонал</option>
+                        <option value="2">участник</option>
+                        <option value="1">судья</option>
+                        <option value="3">зритель</option>
+                    </select>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <label>
+                        <input type="file" id="files" name="files" class="input-form">
+                        <div class="img-box" id="img-box"><img id="img-field" src="https://mehrad.hospital/wp-content/uploads/2020/08/default.jpg" alt=""></div>
+                    </label>
+                    
+                </li>
+                <li>
+                    <input type="email" placeholder="email" name="email" id="email-form" class="input input-form">
+                </li>
+                <li>
+                    <li><p>отправить копию кода себе?</p>
+                        <input type="checkbox" name="send-ximple" id="" value="отправить сообщение себе"></li>
+                    <input type="text" value="create-user" name="type-request" hidden>
+                    <input type="submit" class="submit input" value="добавить">
+                </li>
+                <li>
+                    <input type="button" id="cansel-button"class="input" value="отмена">
+                </li>
+            </ul>
+            <input type="text" name="id-event" id="reg-link-id-event" value="{{ current_event_id }}" hidden>
+        </form>
+    </div>
+    <script>
+        function showFile(e) {
+            var files = e.target.files;
+            for (var i = 0, f; f = files[i]; i++) {
+            if (!f.type.match('image.*')) continue;
+            var fr = new FileReader();
+            fr.onload = (function(theFile) {
+                return function(e) {
+                var img = document.getElementById('img-field');
+                img.src = e.target.result;
+                // document.getElementById('img-box').insertBefore(img, null);
+                };
+            })(f);
+        
+            fr.readAsDataURL(f);
+            }
+        }
+        function ev_showFile(e) {
+            var files = e.target.files;
+            for (var i = 0, f; f = files[i]; i++) {
+            if (!f.type.match('image.*')) continue;
+            var fr = new FileReader();
+            fr.onload = (function(theFile) {
+                return function(e) {
+                var img = document.getElementById('event-field');
+                console.log('фотка загружена')
+                img.src = e.target.result;
+                // document.getElementById('img-box').insertBefore(img, null);
+                };
+            })(f);
+        
+            fr.readAsDataURL(f);
+            }
+        }
+        function sec_showFile(e) {
+            var files = e.target.files;
+            for (var i = 0, f; f = files[i]; i++) {
+            if (!f.type.match('image.*')) continue;
+            var fr = new FileReader();
+            fr.onload = (function(theFile) {
+                return function(e) {
+                var img = document.getElementById('secure-field');
+                img.src = e.target.result;
+                // document.getElementById('img-box').insertBefore(img, null);
+                };
+            })(f);
+        
+            fr.readAsDataURL(f);
+            }
+        }
+        document.getElementById('files').addEventListener('change', showFile, false);
+        document.getElementById('event-files').addEventListener('change', ev_showFile, false);
+        document.getElementById('secure-files').addEventListener('change', sec_showFile, false);
+
+        // document.querySelector('body').onclick() = function () {
+        //     console.log('body');
+        // };
+        var create_event = '#create-event';
+        var create_security = '#create-security';
+        var created_events = '#created-events';
+
+        var created_events_container = "#created-events-container";
+        var reg_form_container = "#reg-form-container";
+        var create_security_container = "#create-security-container"
+        var selected_event_container = '#selected-event-container'
+
+        $(create_event).on('click', function () {
+            console.log('создать евент')
+            $(reg_form_container).attr('hidden', false);
+
+            $(created_events_container).attr('hidden', true);
+            $(selected_event_container).attr('hidden', true);
+            $(create_security_container).attr('hidden', true);
+            // $(create_event).attr('hidden', false);
+        })
+
+        $(create_security).on('click', function () {
+            console.log('создать охранника')
+            $(create_security_container).attr('hidden', false);
+            // $(create_security).attr('hidden', true);
+            $(reg_form_container).attr('hidden', true);
+            $(created_events_container).attr('hidden', true);
+            $(selected_event_container).attr('hidden', true);
+
+            // $(create_event).attr('hidden', false);
+            // $(created_events).attr('hidden', false);
+        })
+
+        $(created_events).on('click', function () {
+            console.log('создать событие')
+            $(created_events_container).attr('hidden', false);
+            $(selected_event_container).attr('hidden', false);
+
+            $(reg_form_container).attr('hidden', true);
+            $(create_security_container).attr('hidden', true);
+            // $(created_events).attr('hidden', false);
+        })
+
+
+        $('#created-user').on('click', function () {
+            console.log('тык')
+            
+            $('.reg-new-user-box').attr('hidden', false);
+            // $('.input-form').val('')
+            // event-id-link
+            // console.log($('#create-user').parent().children('#event-id-link'))
+            // $('#reg-link-id-event').val( $('#create-user').parent().children('#event-id-link').val() )
+            // console.log($('#event-id-link').val())
+            console.log($('#reg-link-id-event').val())
+        })
+
+        $('#cansel-button').on('click', function () {
+            console.log('тaк')
+            $('.reg-new-user-box').attr('hidden', true);
+        })
+    </script>
+</body>
+</html>

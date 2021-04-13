@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+<!--    <link href="../static/css/settings-event-style.css" rel="stylesheet"/>-->
+    <link href="{{ url_for('static', filename='css/settings-event-style.css')}}" rel="stylesheet"/>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="profile">
+
+            <div class="event-image" style="background-image: url('{{ image }}')"></div>
+
+            <ul class="profile-data">
+                <li>{{ event['name'] }}</li>
+                <li>{{ event['description'] }}</li>
+                <li>{{ event['datetime_start'] }}</li>
+                <li>{{ event['datetime_end'] }}</li>
+            </ul>
+
+        </div>
+        <div class="menu">
+
+            <div class="menu-box">
+                <input class="button input" id="create-user" type="button" value="добавить участника">
+            </div>
+            <div class="users-list">
+
+                <ul>
+                    {% if visitors['count'] == 0%}
+                        <li>нет зарегистрированных участников</li>
+                    {% else %}
+                        {% for visitor in visitors['visitors'] %}
+                            <li>
+                                <label>{{ visitor['name'] }}</label>
+                                <label>{{ visitor['surname'] }}</label>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+
+            </div>
+
+            <form action="{{ url_for('organizer_profile')}}" method="GET">
+                <input type="button" class="button" value="назад">
+                <input type="button" class="button" value="разослать коды">
+            </form>
+        </div>
+    </div>
+    <div class="reg-new-user-box" hidden>
+        <form action="{{ url_for('add_new_user_for_event') }}" method="POST" enctype=multipart/form-data>
+            <ul>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <li class=flashes id="message-info">{{ message }}</li>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <li>
+                    <input type="text" placeholder="имя"  name="name" id="name-form" class="input input-form">
+                </li>
+                <li>
+                    <input type="text" placeholder="фамилия" name="second_name" id="second_name-form" class="input input-form">
+                </li>
+                <li>
+                    <input type="text" placeholder="отчество" name="last_name" id="last_name-form" class="input input-form">
+                </li>
+                <li>
+                    <select class="input" name="role" id="select-field" onmousedown="$(':first-child', this).remove(); this.onmousedown = null;">
+                        <option value="">выберите роль</option>
+                        <option value="4">персонал</option>
+                        <option value="2">участник</option>
+                        <option value="1">судья</option>
+                        <option value="3">зритель</option>
+                    </select>
+                </li>
+                <li>
+                    <label>
+                        <input type="file" id="files" name="files" class="input-form">
+                        <div id="img-box"><img id="img-field" src="" alt=""></div>
+                    </label>
+                </li>
+                <li>
+                    <input type="email" placeholder="email" name="email" id="email-form" class="input input-form">
+                </li>
+                <li>
+                    <input type="text" name="send_copy" value="send_copy" hidden>
+                    <input type="submit" class="submit input" value="участвовать">
+                </li>
+                <li>
+                    <input type="button" id="cansel-button"class="input" value="отмена">
+                </li>
+            </ul>
+            <input type="text" name="id-event" id="reg-link-id-event" value="{{ event_id }}" hidden>
+        </form>
+    </div>
+    <script>
+        $('#create-user').on('click', function () {
+            console.log('тык')
+            $('.reg-new-user-box').attr('hidden', false);
+            $('.input-form').attr('value', '')
+        })
+
+        $('#cansel-button').on('click', function () {
+            console.log('тук')
+            $('.reg-new-user-box').attr('hidden', true);
+        })
+        function showFile(e) {
+            var files = e.target.files;
+            for (var i = 0, f; f = files[i]; i++) {
+            if (!f.type.match('image.*')) continue;
+            var fr = new FileReader();
+            fr.onload = (function(theFile) {
+                return function(e) {
+                var img = document.getElementById('img-field');
+                img.src = e.target.result;
+                // document.getElementById('img-box').insertBefore(img, null);
+                };
+            })(f);
+
+            fr.readAsDataURL(f);
+            }
+        }
+
+        document.getElementById('files').addEventListener('change', showFile, false);
+    </script>
+</body>
+</html>

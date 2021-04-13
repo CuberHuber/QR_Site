@@ -1,0 +1,84 @@
+
+.event-image{
+    width: 200px;
+    height: 200px;
+}
+
+:root{
+    --main_element_color: rgba(226, 176, 46, 1);
+    --menu-element-color: rgba(251, 251, 251, 1);
+    }
+
+#img-box{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    /* width: max-content; */
+    margin: 0 auto;
+
+}
+/* 
+#files{ 
+    visibility: hidden;
+    opacity:0;
+} */
+
+#img-box>#img-field{
+    background-image: url('https://mehrad.hospital/wp-content/uploads/2020/08/default.jpg');
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    -o-object-fit: cover;
+  object-fit: cover;
+  object-position: center;
+}
+
+.reg-new-user-box{
+    position: absolute;
+    /* display: none; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    background-color: #c4bdbd;
+}
+
+
+.input{
+    border-radius: 5px;
+    padding: 5px;
+    width: 188px;
+    margin: 0 auto;
+}
+
+#select-field{
+    width: 200px;
+}
+
+.submit{
+    width: 200px;
+    position: relative;
+    /* width: 100%;
+    width: 200px; */
+    background-color: var(--main_element_color);
+
+}
+
+.ul-reg-event{
+    display: block;
+    padding: 0;
+    margin: 0;
+    padding-top: 40px;
+}
+
+.ul-reg-event>li{
+    display: block;
+    padding: 0;
+    margin: 0 auto;
+    width: max-content;
+    padding-bottom: 10px;
+}

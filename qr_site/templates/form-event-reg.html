@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+    <link type="" href="../static/css/form-event-reg-style.css" rel="stylesheet"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- <script src="../static/js/image-event-reg.js"></script> -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="./js/fileinput.js"></script> -->
+</head>
+<body>
+    <section class="reg-form-container">
+        <div class="">
+            <form action="" method="POST">
+                <ul class="ul-reg-event">
+                    <li>
+                        <input type="text" placeholder="fullname" name="fullname" id="fullname-form" class="input">
+                    </li>
+                    <li>
+                        <select class="input" name="" id="select-field" onmousedown="$(':first-child', this).remove(); this.onmousedown = null;">
+                            <option value="">выберите роль</option>
+                            <option value="">зритель</option>
+                            <option value="">участник</option>
+                            <option value="">судья</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="file" id="files" name="files[]" >
+                            <div id="img-box"><img id="img-field" src="" alt=""></div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="email" placeholder="email" name="email" id="email-form" class="input">
+                    </li>
+                    <li>
+                        <input type="button" class="submit input" value="участвовать">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </section>
+    <script>
+        function showFile(e) {
+            var files = e.target.files;
+            for (var i = 0, f; f = files[i]; i++) {
+            if (!f.type.match('image.*')) continue;
+            var fr = new FileReader();
+            fr.onload = (function(theFile) {
+                return function(e) {
+                var img = document.getElementById('img-field');
+                img.src = e.target.result;
+                // document.getElementById('img-box').insertBefore(img, null);
+                };
+            })(f);
+        
+            fr.readAsDataURL(f);
+            }
+        }
+        
+        document.getElementById('files').addEventListener('change', showFile, false);
+
+        // document.querySelector('body').onclick() = function () {
+        //     console.log('body');
+        // };
+    </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+
+:root{
+    --main_element_color: rgba(226, 176, 46, 1);
+    --menu-element-color: rgba(251, 251, 251, 1);
+    }
+
+.img-box{
+    position: relative;
+    width: 222px;
+    height: 222px;
+    overflow: hidden;
+    /* width: max-content; */
+    margin: 0 auto;
+
+}
+
+#img-box{
+    position: relative;
+    width: 222px;
+    height: 222px;
+    overflow: hidden;
+    /* width: max-content; */
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 0 3em rgb(167, 159, 159), 0 0 2em rgb(214, 106, 56);
+    
+
+}
+
+#secure-files, #event-files, #files{ 
+    visibility: hidden;
+    opacity:0;
+}
+
+.img-box>#secure-field, .img-box>#event-field, #img-box>#field{
+    background-image: url('https://mehrad.hospital/wp-content/uploads/2020/08/default.jpg');
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    object-position: center/2;
+}
+
+.reg-form-container{
+    /* position: absolute; */
+    /* display: none; */
+    /* top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+    background-color: #c4bdbd;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    /* margin: 0;
+    position: fixed;
+    display: none;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    background-color: #c4bdbd; */
+}
+
+.form-reg-users{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+.input{
+    border-radius: 5px;
+    padding: 5px;
+    width: 188px;
+    margin: 0 auto;
+}
+
+#select-field{
+    width: 200px;
+}
+
+.submit{
+    width: 200px;
+    position: relative;
+    /* width: 100%;
+    width: 200px; */
+    background-color: var(--main_element_color);
+
+}
+
+.ul-reg-event{
+    display: flex;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.ul-reg-event>li{
+    display: flex;
+    padding: 0;
+    margin: 0;
+    width: 90%;
+    /* padding-bottom: 10px; */
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+/* ul, li{
+    display: block;
+    padding: 0;
+    margin: 0;
+    /* position: relative; */
+/* }
+
+ul{
+    padding-top: 40px;
+}
+li{
+    margin: 0 auto;
+    width: max-content;
+    padding-bottom: 10px;
+} */

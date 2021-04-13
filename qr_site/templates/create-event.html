@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+    <link type="" href="../static/css/form-event-reg-style.css" rel="stylesheet"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="reg-form-container">
+        <div class="">
+            <form action="" method="POST">
+                <ul class="ul-reg-event">
+                    <li>
+                        <input type="text" placeholder="Название мероприятия" name="title" id="fullname-form" class="input">
+                    </li>
+                    <li>
+                        <label for="">описание мероприятия</label>
+                        <textarea name="" id="" cols="30" rows="10"></textarea>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="file" id="files" name="files[]" >
+                            <div id="img-box"><img id="img-field" src="" alt=""></div>
+                        </label>
+                    </li>
+                    <li>
+                        <label for="">Начало мероприятия</label>
+                        <input type="datetime-local" name="" id="">
+                    </li>
+                    <li>
+                        <label for="">Конец мероприятия</label>
+                        <input type="datetime-local" name="" id="">
+                    </li>
+                    <li>
+                        <input type="button" class="submit input" value="участвовать">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    <script>
+        function showFile(e) {
+            var files = e.target.files;
+            for (var i = 0, f; f = files[i]; i++) {
+            if (!f.type.match('image.*')) continue;
+            var fr = new FileReader();
+            fr.onload = (function(theFile) {
+                return function(e) {
+                var img = document.getElementById('img-field');
+                img.src = e.target.result;
+                // document.getElementById('img-box').insertBefore(img, null);
+                };
+            })(f);
+        
+            fr.readAsDataURL(f);
+            }
+        }
+        
+        document.getElementById('files').addEventListener('change', showFile, false);
+
+        // document.querySelector('body').onclick() = function () {
+        //     console.log('body');
+        // };
+    </script>
+</body>
+</html>

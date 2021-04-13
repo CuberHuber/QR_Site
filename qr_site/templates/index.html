@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+    <link type="" href="{{ url_for('static', filename='css/index_style.css')}}" rel="stylesheet"/>
+    <link type="" href="{{ url_for('static', filename='css/form-event-reg-style.css')}}" rel="stylesheet"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <!-- Тут у нас голова сайта и главные контейнеры -->
+        <div class="container">
+            <div class="nav">
+                <ul class="menu">
+                    <li><a href="#">главная</a></li>
+                    {% if user %}
+                        {% if user['privilege_id'] == 2 %}
+                            <li><a href="{{ url_for('organizer_profile') }}">мои мероприятия</a></li>
+                            <li><a href="{{ url_for('organizer_profile') }}">создать</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li><a href="#">мероприятия</a></li>
+                    {% endif %}
+                    <li><a href="#">о нас</a></li>
+                </ul>
+
+                {% if user %}
+                    <div class="user-front">
+                        <p>{{ user['name'] }} {{ user['surname']}}</p>
+                    </div>
+                {% else %}
+                    <div class="register">
+                        <form action="">
+                            <a href="{{ url_for('register') }}">Регистрация</a>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+            <hr>
+            {% if user %}
+                <div class="user-menu">
+<!--                    <form action="{{ url_for('logout') }}" method="GET">-->
+                    <form method="GET">
+                        {% if user['privilege_id'] == 2%}
+                            <li><a href="{{ url_for('organizer_profile') }}">профиль</a></li>
+                            <li><hr></li>
+                            <li>
+                                <a href="{{ url_for('organizer_profile') }}">создать</a>
+                            </li>
+                            <li><hr></li>
+                        {% endif %}
+                        <li>
+                            <a href="{{ url_for('logout') }}">Выйти</a>
+                        </li>
+                    </form>
+                </div>
+            {% endif %}
+            <!-- тут все под вопросом. скорее всего здесь будет только кнопка мероприятий -->
+            <div class="nav-menu">
+                <div class="menu-button" id="button-events">
+                    <a href="#event-container">Участвовать</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section id="event-container" class="content">
+        <!-- Здесь будут выводиться все мероприятия -->
+        <!-- страницы сайта -->
+        <div class="container">
+            <h2>Мероприятия</h2>
+            <div class="content">
+                <div class="filter">
+                    <label>ФИЛЬТР</label>
+                </div>
+                <div class="enumerate-page">
+                    {% if amount_page != 0 %}
+                    <ul class="number-pages">
+                    {% for page in numbers_page %}
+                        {% if page - 1 == action_number_page %}
+                            <a href="{{ url_for('pages', _page=page)}}">
+                                <li class="number-page action">{{page}}</li>
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('pages', _page=page)}}">
+                                <li class="number-page">{{page}}</li>
+                            </a>
+                        {% endif %}
+                    {% endfor%}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% if amount_page != 0 %}
+                    <ul class="events">
+                    {% for event in range(action_number_page*5, action_number_page*5 + 5) %}
+                        {% if event < events['count'] %}
+                            <li class="event">
+                                <div class="wripe-event-image" style="background-image: url('{{ _id_to_img[events['events'][event]['id']] }}')">
+                                    <div class="wripe-event-image-shadow">
+                                        <p class="event-description">{{ events['events'][event]['description']}}</p>
+                                        <h2 class="event-title" > {{ events['events'][event]['name']}}</h2>
+                                    </div>
+                                    <!-- <p class="id-events" value="{{ events['events'][event]['id']}}" hidden></p> -->
+                                </div>
+                                <h3 class="event-datetime">от {{ events['events'][event]['datetime_start']}}  -  до {{ events['events'][event]['datetime_end']}}</h3>
+                                <div class="reg-add-on-event">
+                                    <form action="{{ url_for('add_user_on_event') }}" method="POST">
+                                        <input type="text" value="{{ events['events'][event]['id'] }}" name="id_event" style="display: none;">
+                                        <input type="submit" value="участвовать" class="member-event menu-button" value="{{ events['events'][event]['id'] }}" id="member-event-{{ events['events'][event]['id'] }}">
+                                    </form>
+                                    <!-- <form action="" method="POST"> -->
+                                        <!-- <input type="text" value="{{ events['events'][event]['id'] }}" name="id_event" style="display: none;"> -->
+                                        <input type="button" value="пригласить" class="referral-link member-event menu-button" value="{{ events['events'][event]['id'] }}" id="{{ events['events'][event]['id'] }}">
+                                    <!-- </form> -->
+                                </div>
+                                <!-- <div >
+                                    Участвовать
+                                </div> -->
+                            </li>
+                        {% endif %}
+                    {% endfor%}
+                    </ul>
+                {% else %}
+                    <div>Мероприятий нет</div>
+                {% endif %}
+
+                <div class="enumerate-page">
+                    {% if amount_page != 0 %}
+                    <ul class="number-pages">
+                    {% for page in numbers_page %}
+                        {% if page - 1 == action_number_page %}
+                            <a href="{{ url_for('pages', _page=page)}}">
+                                <li class="number-page action">{{page}}</li>
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('pages', _page=page)}}">
+                                <li class="number-page">{{page}}</li>
+                            </a>
+                        {% endif %}
+                    {% endfor%}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <!-- тут просто теплый подвальчик с контактами -->
+        <div class="container">
+            <ul class="footer-info">
+                <li>просто инфа</li>
+                <li>о нас</li>
+                <li>телефон</li>
+                <li></li>
+            </ul>
+        </div>
+    </footer>
+    <section class="reg-form-container">
+            <form action="{{ url_for('add_referral_link') }}" method="POST" enctype=multipart/form-data>
+                <ul>
+                    <li>
+                        <input type="text" placeholder="имя" name="name" id="name-form" class="input">
+                    </li>
+                    <li>
+                        <input type="text" placeholder="фамилия" name="second_name" id="second_name-form" class="input">
+                    </li>
+                    <li>
+                        <label>
+                            <input type="file" id="files" name="files">
+                            <div id="img-box"><img id="img-field" src="" alt=""></div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="email" placeholder="email" name="email" id="email-form" class="input">
+                    </li>
+                    <li>
+                        <input type="submit" class="submit input" value="участвовать">
+                    </li>
+                </ul>
+                <input type="text" name="id-event" id="reg-link-id-event" value="" hidden>
+            </form>
+    </section>
+    <script>
+        function showFile(e) {
+            var files = e.target.files;
+            for (var i = 0, f; f = files[i]; i++) {
+            if (!f.type.match('image.*')) continue;
+            var fr = new FileReader();
+            fr.onload = (function(theFile) {
+                return function(e) {
+                var img = document.getElementById('img-field');
+                img.src = e.target.result;
+                // document.getElementById('img-box').insertBefore(img, null);
+                };
+            })(f);
+
+            fr.readAsDataURL(f);
+            }
+        }
+
+        document.getElementById('files').addEventListener('change', showFile, false);
+
+
+        
+        var selector = $('.referral-link');
+        var reg_form_cont = $('.reg-form-container');
+        var option = $('.option');
+        var flag = 0;
+
+        selector.on('click', function() {
+                flag = 1;
+                console.log($(event.target).attr('id'));
+                
+                $('#reg-link-id-event').attr('value', $(event.target).attr('id'));
+                console.log($('#reg-link-id-event').attr('value'));
+                // console.log(selector.parent().children('.id-events'))
+                reg_form_cont.css('display', 'block');
+            return false;
+        });
+
+        $(document).click(function(event) {
+            if ($(event.target).closest('.reg-form-container').length) return;
+            else {
+                flag = 0; // вот тут нужен
+                $('.reg-form-container').css('display', 'none');
+            }
+        });
+
+        var user_menu_height = 0;
+
+        $(document).ready(function () {
+            // user_menu_height = $('.user-menu').height;
+            console.log($('.user-front').css('padding-right') + $('.user-front').css('padding-left'));
+            $('.user-menu').width($('.user-front').width());
+            $('.user-menu').css('padding-right', $('.user-front').css('padding-right'));
+            $('.user-menu').css('padding-left', $('.user-front').css('padding-left'));
+        })
+
+        
+        var user_flag = 0
+        $('.user-front').on('click', function () {
+        
+            if (user_flag == 0){
+                $('.user-menu').css('display', 'block');
+                user_flag = 1;   
+            }
+            else{
+                
+                $('.user-menu').css('display', 'none');
+                user_flag = 0;
+            }
+                
+        });
+
+        // $(document).scrollTop(function () {
+
+        //     top: expression(window.scrollTop + "px");
+        // })
+
+        window.addEventListener('scroll', function() {
+            // $('.reg-form-container').css('top', expression(window.scrollTop + "px"));
+            console.log('круть');
+            $('.reg-form-container').css('top', pageYOffset + innerHeight/2 + "px")
+            console.log(innerHeight);
+            //console.log($('.reg-form-container').css('top'))
+            // document.getElementById('showScroll').innerHTML = pageYOffset + 'px';
+        });
+
+        $('.wripe-event-image-shadow').mouseover( function () {
+            // console.log('навелся')event-title
+            $(this).children('.event-description').css('color', 'white')
+            $(this).children('.event-title').css('color', 'white')
+        });
+
+
+        $('.wripe-event-image-shadow').mouseout(function(){
+            $(this).children('.event-description').css('color', 'black')
+            $(this).children('.event-title').css('color', 'black')
+        });
+    </script>
+</body>
+</html>

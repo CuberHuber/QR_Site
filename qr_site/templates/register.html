@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="" href="{{ url_for('static', filename='css/var-text_style.css')}}" rel="stylesheet"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+<!-- {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %} -->
+    <div class="container">
+        <form action="{{ url_for('register') }}" method="post">
+            <label for=""><h1>Регистрация</h1></label>
+            <div class="reg-radio-box">
+                <input type="radio" name="radio" value="mem" id="mem-ios" checked="true">
+                <input type="radio" name="radio" value="org" id="org-android">
+                <label for="mem-ios" id="-mem-ios" class="mem-ios right">
+                  <!-- <div class="dot"></div> -->
+                  <span>участник</span>
+                </label>
+                <label for="org-android" id="-org-android" class="org-android left">
+                  <!-- <div class="dot"></div> -->
+                  <span>организатор</span>
+                </label>
+              </div>
+            <ul>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <li class=flashes id="message-info">{{ message }}</li>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <li>
+                    <input type="email" placeholder="email" name="email" id="email-form" class="input">
+                </li>
+                <li>
+                    <input type="text" placeholder="имя" name="firstname" id="first-name-form" class="input">
+                </li>
+                <li>
+                    <input type="text" placeholder="фамилия" name="secondname" id="second-name-form" class="input">
+                </li>
+                <li>
+                    <input type="text" placeholder="Отчество" name="lastname" id="last-name-form" class="input">
+                </li>
+                <li>
+                    <input type="password" placeholder="password" name="password1" id="password-form" class="input">
+                </li>
+                <li>
+                    <input type="password" placeholder="repeat password" name="password2" id="repeat-password-form" class="input">
+                </li>
+                <li>
+                    <input type="submit" value="зарегистрироваться" name="log_in" class="input submit">
+                </li>
+                <li>
+                    <a href="{{ url_for('login_page') }}" class>Login</a>
+                </li>
+            </ul>
+        </form>
+    </div>
+    <script>
+        // console.log('Загрузка')
+        // $(function(){
+        //     $("#org-android").click(function() {
+        //         //действия
+        //         console.log('клик')
+
+        //         $(this).prop('checked', true);
+        //         console.log($(this) )
+        //         $(this).prop('checked', false);
+        //         $('#-org-android').css('background-color', 'rgba(226, 176, 46, 1)');
+        //         $('#-mem-ios').css('background-color', 'rgba(251, 251, 251, 1)');
+        //     });
+        // });
+        // $(function(){
+        //     $("#mem-ios").click(function() {
+        //         //действия
+        //         console.log('клик')
+        //         $(this).prop('checked', true);
+        //         console.log($(this).checked)
+        //         $(this).prop('checked', false);
+        //         $('#-mem-ios').css('background-color', 'rgba(226, 176, 46, 1)');
+        //         $('#-org-android').css('background-color', 'rgba(251, 251, 251, 1)');
+        //     });
+        // });
+    </script>
+</body>
+</html>

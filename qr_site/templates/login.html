@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- <link type="" href="{{ url_for('static', filename='css/index_style.css')}}" rel="stylesheet"/> -->
+    <link type="" href="../static/css/login_style.css" rel="stylesheet"/>
+    <link type="" href="{{ url_for('static', filename='css/var-text_style.css')}}" rel="stylesheet"/>
+    
+</head>
+<body>
+    <div class="container">
+        <form action="{{ url_for('login_page') }}" method="post">
+            <label for=""><h1>Войти</h1></label>
+            <ul>
+                <li>
+                    <input type="email" placeholder="email" name="email" id="email-form" class="input">
+                </li>
+                <li>
+                    <input type="password" placeholder="password" name="password" id="password-form" class="input">
+                </li>
+                <li>
+                    <a href="">забыли пароль?</a>
+                </li>
+                <li>
+                    <input type="submit" value="войти" name="log_in" class="input submit">
+                </li>
+                <li>
+                    <a href="{{ url_for('register') }}" class>register</a>
+                </li>
+            </ul>
+        </form>
+    </div>
+</body>
+</html>
